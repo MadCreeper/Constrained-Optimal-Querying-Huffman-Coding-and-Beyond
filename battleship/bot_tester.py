@@ -56,8 +56,11 @@ def test(Bot, rounds):
   
 def main():
     all_boards = SimulationBoard(N=10, M=10, ship_dims=[5, 4, 3], debug=True, randseed=114514).gen_boards()
-    Bot = GreedyBot(all_boards, debug=False, visualize=False)
+    # debug: prints all info
+    # visualize: prints the Battleship emoji visualization 😁
+    Bot = GreedyBot(all_boards, debug=True, visualize=True)
     
+    # Tweak the number of rounds here
     rounds = 1000
     avg_tries, avg_tries_to_sink = test(Bot, rounds)
     
