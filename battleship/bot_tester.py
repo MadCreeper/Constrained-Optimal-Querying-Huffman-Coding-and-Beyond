@@ -1,4 +1,3 @@
-from cProfile import label
 from greedy_battleship_bot import GreedyBot, visualize_board
 from BoardGenerator import SimulationBoard
 from matplotlib import pyplot as plt
