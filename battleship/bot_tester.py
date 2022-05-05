@@ -59,7 +59,7 @@ def main():
     # visualize: prints the Battleship emoji visualization 😁
     Bot = GreedyBot(all_boards, debug=True, visualize=True)
     
-    # Tweak the number of rounds here
+    # Tweak the number of rounds here. 1000 rounds takes about 3 hours.
     rounds = 1000
     avg_tries, avg_tries_to_sink = test(Bot, rounds)
     
