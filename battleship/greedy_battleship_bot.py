@@ -158,6 +158,6 @@ class GreedyBot(Battleship_bot):
 if __name__ == "__main__":
     np.set_printoptions(precision=3)
     
-    all_boards = SimulationBoard(N=10, M=10, ship_dims=[5, 4, 3], debug=True, randseed=1919810).gen_boards()
+    all_boards = SimulationBoard(N=10, M=10, ship_dims=[5, 4, 3], debug=True, randseed=123456).gen_boards()
     Bot = GreedyBot(all_boards, debug=False, visualize=True)
     Bot.play_game(elimination_method=Bot.greedy_elimination)
