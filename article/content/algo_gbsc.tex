@@ -1,0 +1,59 @@
+%----------------------------------------------------------------------------------------
+% Research design
+%----------------------------------------------------------------------------------------
+
+\section{Greedy Algorithms Based on GBSC}
+
+\subsection{Basic Structure}
+
+The basic idea of the algorithm is shown below. In practice, the most difficult part is how to find the best question (line 2). However, since usually $|\mathscr{A}|$ is small and $\mathscr{A}$ has a simple structure, this process is often very simple. This is especially the case when we deal with the Battleship problem later.
+
+% \begin{algorithm}[H]
+% 	\caption{Greedy algorithm based on GBSC} 
+% 	\begin{algorithmic}[1]
+%     \State initialize the initial dataset $data$
+% 	 \Procedure{binary}{x}
+% 	        \If {the length of $x$ is 1}
+% 	                \State \Return $x$
+% 	        \EndIf
+%             \State initailize empty array $temp$
+%             \For{every $i \in x$ }
+%                     \State add $data[i]$ to $temp$
+%             \EndFor
+%             \State $s \gets $ sum of numbers in $temp$
+%             \For{every $i \in temp$ }
+%                     \State $i \gets i / s$
+%             \EndFor
+%             		\State the sum of probability of exons between $u$ and $v$ is closest to 0.5
+%             		\If{target exon is between $u$ and $v$ }
+%             		        \State $x \gets$ $x[u:v]$
+%             		\Else 
+%             		        \State $x \gets$ $x[:u] + x[v:]$
+%             		\EndIf
+%             \State \Return \Call{binary}{$x$}
+%      \EndProcedure
+% 	\end{algorithmic} 
+	
+% \end{algorithm}
+
+\begin{algorithm}[H]
+	\caption{Greedy algorithm based on GBSC} 
+	\begin{algorithmic}[1]
+	\Procedure{GBSC}{node, p}
+	    \State choose question $X \in \mathscr{A}$ that makes the left and right subtrees most average
+	    \State $p_1 \gets$ the possibilities in condition that the question is true
+	    \State \Call{GBSC}{$root.left, p_1$}
+	    \State $p_2 \gets$ the possibilities in condition that the question is false
+	    \State \Call{GBSC}{$root.right, p_2$}
+    \EndProcedure
+	\State read $p$, where $p[i]$ is the probability of $i$
+	\State initialize $root$
+	\State \Call{GBSC}{$root, p$}
+	\end{algorithmic} 
+	
+\end{algorithm}
+
+
+\input{content/Battleship}
+\input{content/DNA_GBSC}
+

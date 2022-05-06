@@ -1,0 +1,85 @@
+%----------------------------------------------------------------------------------------
+% Introduction
+%----------------------------------------------------------------------------------------
+\setcounter{page}{1} % Sets counter of page to 1
+
+\section{Introduction} % Add a section title
+
+Our research is inspired by a problem in Cover's textbook\cite{cover1999elements} (see page 153).
+
+\begin{example}[Bad wine]
+\label{badWine}
+One is given six bottles of wine. It is known that precisely one bottle has gone bad (tastes terrible). From inspection of the bottles it is determined that the probability $p_i$ that the $i$th bottle is bad is given by $(p_1, p_2, \dots, p_6) = (\frac{8}{23},\frac{6}{23},\frac{4}{23},\frac{2}{23},\frac{2}{23}, \frac{1}{23})$. Tasting will determine the bad wine. You can mix some of the wines in a fresh glass and sample the mixture. You proceed, mixing and tasting, stopping when the bad bottle has been determined. What is the minimum expected number of tastings required to determine the bad wine?
+\end{example}
+
+As an exercise in the textbook, this problem is well solved. In fact, it is equivalent to Huffman coding. The process that we determine which bottle of wine is bad can be regarded as a decision tree. At each node, we make an observation that has two possible outcomes (in this example, good or bad) and move to the left or right child node according to the outcome. This process continues until we reach a leaf node. If we represent each move to left with $0$ and each move to right with $1$, then a move sequence can be represented by a binary code. Minimizing the expected number of moves is equivalent to minimizing the expected code length, so we only need to use Huffman coding.
+
+We want to generalize this problem. A natural generalization is changing the number of bad wines. It seems that the original Huffman coding strategy will still work, but unfortunately, it is wrong. This is shown by the following example.
+
+\begin{example}[More bad wine]
+\label{moreBadWine}
+The background is similar to Example \ref{badWine}, but this time there are four bottles of wine to be examined and two of them are bad. Suppose the probability $p_{ij}$ that the $i$th and $j$th bottles are bad is given by $(p_{12},p_{13},p_{14},p_{23},p_{24},p_{34})=(0.1,0.1,0.15,0.15,0.3,0.2)$. What is the minimum expected number of tastings required to determine the two bad wines?
+\end{example}
+
+If we repeat the Huffman coding strategy, we will obtain the unique Huffman tree below.
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[level distance=1.5cm,
+      level 1/.style={sibling distance=4cm},
+      level 2/.style={sibling distance=2cm}]
+      \node [treenode, draw] {$1$}
+        child
+        {
+            node [treenode, draw] {$0.4$}
+            child 
+            {
+                node [treenode, draw]{$0.2$}
+                child 
+                {
+                    node [treenode, draw]{$p_{12}$}
+                }
+                child 
+                {
+                    node [treenode, draw]{$p_{13}$}
+                }
+            }
+            child 
+            {
+                node [treenode, draw]{$p_{34}$}
+            }
+        }
+        child
+        {
+            node [treenode, draw] {$0.6$}
+            child 
+            {
+                node [treenode, draw]{$p_{24}$}
+            }
+            child 
+            {
+                node [treenode, draw]{$0.3$}
+                child 
+                {
+                    node [treenode, draw]{$p_{14}$}
+                }
+                child 
+                {
+                    node [treenode, draw]{$p_{23}$}
+                }
+            }
+        };
+    \end{tikzpicture}
+    \caption{Huffman Tree of Example \ref{moreBadWine}.}
+    % \label{fig:my_label}
+\end{figure}
+
+The expected Huffman code length is $2.5$, but it is not the answer. This is because the decision tree we have constructed is infeasible. To see this, just look at the root of the tree. Note that in both the left and right subtrees, every bottle of wine may be bad, so there is no way that we can decide in which direction we should move by just one observation.
+
+% We wrote a program that enumerates all the possibilities, and it shows that the optimal solution to the example is the tree below, with a expected length of $114514$.
+
+% (to be done, draw a tree)
+
+Example \ref{moreBadWine} shows that changing Example \ref{badWine} a little bit will produce a much more difficult problem. In fact, Example \ref{moreBadWine} is just an instance of a huge family of similar problems, and finding the precise solution of these problems is usually extremely difficult.
+
+In this report, we proposed a generalized model that formulates such type of problems, and analyzed three problems related to this model. We designed two generalized approximate algorithms for these problems. One algorithm is based on Huffman coding, while the other is based on a new code scheme (at least not being researched much). We call the new code GBSC (Greedy Binary Separation Code), and we proved an interesting property of GBSC.

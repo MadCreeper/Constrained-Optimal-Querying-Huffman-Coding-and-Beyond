@@ -1,0 +1,13 @@
+\section{Future Work}
+
+Here we propose some aspects that can be further researched.
+
+\begin{itemize}
+    \item For the DNA detection problem, our algorithm only works the simplified problem where there is only one target exon. A more general efficient multi-exon detection algorithm remains to be discovered.
+
+    \item Finding the true optimal solution of the DNA detection problem and the Battleship problem is probably a NP-hard problem. Can we prove it?
+
+    \item In this report, we implicitly assume that the distribution $p(x)$ is independent, i.e., $\forall i, j \in \mathcal{X}$, $p(i)$ and $p(j)$ are independent. If this condition is canceled, the shape of possible decision trees will not be arbitrary, making a better algorithm possible.
+    
+    \item Currently the our GBSC algorithm runs brute force to find the separation with probability closest to $\frac{1}{2}$. This can be time-costly for larger problems, for example, Battleship with a larger board or more ships, so there may be room for optimizations, for example maybe use Monte-Carlo method to get a good-enough approximation.
+\end{itemize}

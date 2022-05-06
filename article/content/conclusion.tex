@@ -1,0 +1,11 @@
+%----------------------------------------------------------------------------------------
+% Conclusion
+%----------------------------------------------------------------------------------------
+
+\section{Conclusion}
+
+In this paper, we purposed a generalized model to similar querying problems where the questions we ask are limited to a subset $\mathscr{A} \subsetneq 2^\mathcal{X}$, by analyzing 3 different problems: Huffman-coding-equivalent, the 1-player Battleship problem, and the DNA detection problem. 
+
+Inspired by Huffman coding and greedy decision trees, we proposed two coding schemes: one based on Huffman coding that merges two nodes greedily if possible, and another called GBSC (Greedy Binary Separation Coding). We then proved that the expected code length of GBSC achieves the Shannon Code bound, meaning GBSC is at least as good as Shannon Coding. 
+
+To see the effectiveness of these two algorithms in real world applications, we applied the Huffman-based coding to the DNA detection problem, and GBSC to both the 1-player Battleship and the DNA detection problem to see how well they perform in terms of average coding length, or equivalently, the average number of queries to determine the target random variable. For the DNA detection problem, out of \num{10000} tests, the Huffman-based algorithm gives expected length $L$ less than $1.1L^*$ in most cases, where $L^*$ is the true optimal calculated by brute force. We also compared the Huffman-based algorithm and GBSC algorithm, and found that while the two algorithm yielded very similar expected lengths, GBSC was much more time-efficient and therefore suitable for larger problems. In 1-player Battleship with a $10\times 10$ board and 3 ships, out of the \num{1000} tests, the GBSC-based algorithm achieves an average of $\bar{T}\approx 1.4 \bar{T}^*=29.651$ queries, where $\bar{T}^*$ is the theoretical best average number of queries. Overall, we can conclude that GBSC and the Huffman-based greedy code performs decently well in solving query-based decision problems that cannot be solved by the original Huffman coding algorithm.

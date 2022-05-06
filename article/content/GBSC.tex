@@ -1,0 +1,215 @@
+%---------------------------------------------------------------------------------
+% Theory
+%---------------------------------------------------------------------------------
+
+\section{Greedy Binary Separation Coding}
+\label{sec:gbsc}
+
+\subsection{Motivation}
+
+The greedy algorithm based on Huffman coding has a vital drawback: when $|\mathcal{X}|$ is large and $|\mathscr{A}|$ is relatively small, the algorithm becomes very slow. In most cases, $|\mathscr{A}|$ is small compared to $|\mathcal{X}|$. Therefore, instead of building the decision tree from bottom to top, we consider another way of building the tree from top to bottom, by choosing the best question. We call this coding Greedy Binary Separation Coding (GBSC).
+
+\subsection{Definition}
+
+We now formally describe GBSC.
+
+\begin{definition}
+$\{A, B\}$ is a (binary) partition of $S$, if $A \cup B = S$ and $A \cap B = \emptyset$.
+\end{definition}
+
+\begin{definition}
+A partition $\{A,B\}$ of $S$ is optimal, if for any partition $\{C,D\}$ of $S$, $|p(A) - p(B)| \le |p(C) - p(D)|$, where $p(X)$ is the sum of all the numbers in $X$.
+\end{definition}
+
+The idea of GBSC is simple. We construct the decision tree from top to bottom. Let $S=\{p(x): x \in \mathcal{X} \}$. At root, we choose any optimal partition of $S$, and split the tree according to the partition. The process is repeated recursively at each node, and each time we try to find the best partition of the candidates of the node.
+
+\begin{example}
+\label{gbscExample}
+If $X\in\{1,2,3,4\}$ and $(p_1,p_2,p_3,p_4)=(0.1,0.2,0.3,0.4)$, then the decision tree of $X$ using GBSC is as follows.
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[level distance=1.5cm,
+      level 1/.style={sibling distance=4cm},
+      level 2/.style={sibling distance=2cm}]
+      \node [treenode, draw] {$1$}
+        child
+        {
+            node [treenode, draw] {$0.5$}
+            child 
+            {
+                node [treenode, draw] {$0.1$}
+            }
+            child 
+            {
+                node [treenode, draw]{$0.4$}
+            }
+        }
+        child
+        {
+            node [treenode, draw] {$0.5$}
+            child 
+            {
+                node [treenode, draw]{$0.2$}
+            }
+            child 
+            {
+                node [treenode, draw]{$0.3$}
+            }
+        };
+    \end{tikzpicture}
+    \caption{Decision tree of Example \ref{gbscExample}.}
+    % \label{fig:my_label}
+\end{figure}
+
+\end{example}
+
+\subsection{Intuition}
+The intuition of GBSC is simple: greedily maximize the information gain (mutual information) at each query. In binary decision trees, each node corresponds to a possible random variable sampled from some distribution. For a query $Q$ on node $X\in \mathcal{X} = \{X_1,X_2,\dots, X_n\}$, each $X_i$ gives a binary answer.
+The query is designed such that 
+$$
+p = \frac{| \{X_i|X_i\in \mathcal{X}  \wedge \text{ query on } X_i \text{ gives result 1} \}|} {n}
+$$
+so $\Pr(Q=1) = p$. 
+The information gain of a query $Q$ with respect to node $X$ is 
+$$
+\begin{aligned}
+I(X;Q) &= H(X) - H(X|Q) \\
+&= H(X) - \Pr(Q=0) H(X|Q=0) - \Pr(Q=1)H(X|Q=1)
+\end{aligned}
+$$
+Suppose $X$ follows a uniform distribution, then $X$ is also conditionally uniformly distributed given $Q$. Then 
+$$
+\begin{aligned}
+I(X;Q)&=\log n- (1-p)\log n(1-p) - p\log np \\
+&= -(1-p)\log (1-p) - p\log p \\
+&= H(p)
+\end{aligned}
+$$
+
+Therefore, $p=\frac{1}{2}$ maximizes the information gain at each node. For more general distributions, we will prove its optimality by the analysis below.
+
+\subsection{Analysis}
+
+Recall that Huffman coding is the best we can do. We hope that GBSC can be as good as Huffman coding. However, sometimes GBSC cannot reach the optimal bound. For $X$ in Example \ref{gbscExample}, the expected code length is $1.9$ for Huffman coding and $2$ for GBSC. Although GBSC is not the best coding, from experiments we observe that most of the time it is quite good, so we believe that the average code length of GBSC will not be too far away from $H(X)$. This idea inspire us to prove the following theorem (we will prove this theorem later).
+
+\begin{theorem}
+\label{gbscShannon}
+Assume that the expected code length is $L_g$ for GBSC and $L_s$ for Shannon coding. Then $L_g \le L_s$, i.e., GBSC is at least as good as Shannon coding.
+\end{theorem}
+
+Recall that $L_s$ also satisfies $L_s < H(X)+1$, so we immediately obtain a good upper bound for $L_g$.
+
+\begin{corollary}
+Assume that the expected code length is $L_g$ for GBSC. Then $L_g < H(X) + 1$.
+\end{corollary}
+
+This gives us confidence that GBSC can be applied to obtain a quite good approximation of the optimal coding. Also, it shows that if we use the same technique mentioned in Cover's textbook (see page 114), we can use GBSC to approach the Shannon bound.
+
+Now we focus on proving Theorem \ref{gbscShannon}. Recall that by definition, the code length for a symbol with probability $p$ in Shannon coding is $\lceil -\log p \rceil$, so we only need to prove this proposition.
+
+\begin{proposition}
+\label{prop1}
+Assume that the code length for a symbol with probability $p$ is $L$ for GBSC. Then $L \le n$ if $p \ge 2^{-n}(n \in \mathbb{Z^+})$ , or equivalently, $L \le \lceil -\log p \rceil$.
+\end{proposition}
+
+
+\begin{proof}
+
+% We prove this by induction on $n$. In the following figures, a circle represents a single node and a square represents a leaf or a subtree. The numbers in the nodes are indices of the nodes, and $p_i$ is the sum of probabilities of all the children nodes of node $i$.
+
+% \textbf{Basic step}. If $n=1$ and $L>1$, as shown in Figure \ref{fig:gbscProof1}, WLOG, assume that $p_4 \ge 0.5$. Then $p_2 > p_3$. If $p_5 < p_2 - p_3$, then moving node $5$ to node $3$ will make $|p_2 - p_3|$ smaller, so $p_5 \ge p_2 - p_3$. Therefore, $p_1 = p_3 + p_4 + p_5 \ge 2p_4 + p_5 > 1$, which is a contradiction. 
+
+% \begin{figure}[H]
+%     \centering
+%     \begin{tikzpicture}[level distance=1.5cm,
+%       level 1/.style={sibling distance=2cm},
+%       level 2/.style={sibling distance=2cm}]
+%       \node [treenode, draw] {$1$}
+%         child {node [treenode, draw] {$2$}
+%             child {node [rectnode, draw]{$4$}}
+%             child {node [rectnode, draw]{$5$}}
+%         }
+%         child { node [rectnode, draw] {$3$}
+%         };
+%     \end{tikzpicture}
+%     \caption{Illustration for the basic step.}
+%     \label{fig:gbscProof1}
+% \end{figure}
+
+
+In Figure \ref{fig:gbscProof}, a circle represents a single node and a rectangle  represents a leaf or a subtree. The content in the nodes are indices of the nodes. Node $i(1)$ and node $i(2)$ are in the $i$th layer. $p_{i(j)}$ is the sum of probabilities of all the children nodes of node $i(j)$. 
+
+We prove by contradiction. WLOG, assume that $p_{k+2(1)} \ge 2^{-(k+1)}$. If $p_{k+2(2)} < p_{k+1(1)} - p_{k+1(2)}$, then moving node $k+2(2)$ to node $k+1(2)$ will make $|p_{k+1(1)} - p_{k+1(2)}|$ smaller\footnote{We do not want to describe the process of "moving" mathematically, because it will just make things harder to understand. In case that some readers may feel confused, we explain the idea more clearly. Simply speaking, moving node $i$ to node $j$ means moving all the leaves in node $i$ to node $j$ so that they become the leaves of node $j$. If there are many leaves to be moved, the process of moving is not unique.}, so $p_{k+2(2)} \ge p_{k+1(1)} - p_{k+1(2)}$. Thus, $p_{k+1(1)} + p_{k+1(2)} \ge 2p_{k+2(1)} + p_{k+2(2)}$. Similarly, $p_{k+2(2)} \ge p_{k(1)} - p_{k(2)}$. Thus, $p_{k(1)} + p_{k(2)} \ge 2p_{k(1)} + p_{k+2(2)} \ge 4p_{k+2(1)} + p_{k+2(2)}$. The same argument shows that $p_{1(1)} + p_{1(2)} \ge 2^{k+1}p_{k+2(1)} + p_{k+2(2)} > 1$, which is a contradiction.
+
+% illustrates the tree we are going to discuss. We consider the root as the $0$th layer, and assume that tree $2$ contains a node in $(k+2)$th layer with a probability $p \ge 2^-{k+1}$. By the inductive assumption, $p_2 > 0.5$. Otherwise, considering node $2$ as the root of a new decision tree will cause a contradiction. 
+
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[level distance=1.5cm,
+      level 1/.style={sibling distance=2cm},
+      level 2/.style={sibling distance=2cm}]
+    \node [treenode, draw] {$0$}
+    child 
+    {
+        node [treenode, draw] {$1(1)$}
+        child
+        {
+            node [treenode, draw]{$\dots$}
+            child
+            {
+                node [treenode, draw]{\footnotesize $k+1(1)$}
+                child
+                {
+                    node [rectnode, draw]{$k+2(1)$}
+                }
+                child {node [rectnode, draw]{$k+2(2)$}}
+            }
+            child {node [rectnode, draw]{$k+1(2)$}}
+        }
+        child {node [rectnode, draw]{$\dots$}}
+    }
+    child { node [rectnode, draw] {$1(2)$} };
+    \end{tikzpicture}
+    \caption{Illustration for the proof of Proposition \ref{prop1}.}
+    \label{fig:gbscProof}
+\end{figure}
+
+% \begin{figure}[H]
+%     \centering
+%     \begin{tikzpicture}[level distance=1.5cm,
+%       level 1/.style={sibling distance=3cm},
+%       level 2/.style={sibling distance=1.5cm}]
+%       \node [treenode, draw] {$1$}
+%         child {node [treenode, draw] {$2$}
+%             child {node [rectnode, draw]{$4$}}
+%             child {node [rectnode, draw]{$5$}}
+%         }
+%         child { node [rectnode, draw] {$3$}
+%         };
+%     \end{tikzpicture}
+%     \caption{}
+% \end{figure}
+
+% \begin{figure}[H]
+%     \centering
+%     \begin{tikzpicture}[level distance=1.5cm,
+%       level 1/.style={sibling distance=3cm},
+%       level 2/.style={sibling distance=1.5cm}]
+%       \node [treenode, draw] {$1$}
+%         child {node [treenode, draw] {$2$}
+%         }
+%         child { node [rectnode, draw] {$2$}
+%             child {node [rectnode, draw]{$4$}}
+%             child { node [rectnode, draw]{$5$}}
+%         };
+%     \end{tikzpicture}
+%     \caption{}
+%     \label{fig:gbscProof3}
+% \end{figure}
+
+
+\end{proof}
+
+

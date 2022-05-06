@@ -1,0 +1,154 @@
+\section{Tutorial}
+
+\subsection{How to draw a tree}
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[level distance=1.5cm,
+      level 1/.style={sibling distance=3cm},
+      level 2/.style={sibling distance=1.5cm}]
+      \node [treenode, draw] {$1.0$}
+        child {node [treenode, draw] {$0.5$}
+            child {node [treenode, draw]{$0.1$}}
+            child {node [treenode, draw]{$0.4$}}
+        }
+        child { node [treenode, draw] {$0.5$}
+            child {node [treenode, draw]{$0.2$}}
+            child {node [treenode, draw]{$0.3$}}
+        };
+    \end{tikzpicture}
+    \caption{I am a Tree}
+    \label{fig:my_label}
+\end{figure}
+
+
+\subsection{How to write pseudocode}
+
+\begin{algorithm}[H]
+	\caption{Find all bridge edges in $G$} 
+	\begin{algorithmic}[1]
+    \State $cnt = 0$
+    \State initialize empty arrays $pre[V], low[V],vis[V]$
+	 \Procedure{dfs}{u}
+     		\State $vis[u] = true$
+            \State $pre[u]=low[u]=cnt++$
+            \For{every edge $(u \rightarrow v) \in E$ }
+            		\If{$vis[v]==true$}
+                    	\State $low[u]=\min(low[u],pre[v])$
+                      \Else
+                      	\State $dfs(v)$
+                      	\State $low[u] =\min(low[u], low[v]) $
+                        \If{$low[v] > pre[u]$}
+                        	\State $u\rightarrow v$ is a bridge edge
+                        \EndIf
+                    \EndIf
+            \EndFor
+     \EndProcedure
+	\end{algorithmic} 
+	
+\end{algorithm}
+
+\subsection{How to insert figures}
+
+\begin{figure}[H] % 不用[H]的话图片可能会跑到其它地方去
+    \centering
+    \includegraphics[width=0.8\textwidth]{figure/asuka2.png}
+    \caption{Asuka}
+    \label{fig:Asuka}
+\end{figure}
+
+
+\subsection{Equations, theorems}
+
+\begin{equation} \label{eq1}
+    I(X;Y) = H(X) - H(X|Y)
+\end{equation}
+
+
+\begin{theorem}[Theorem 1]
+Let \(f\) be a function whose derivative exists in every point, then \(f\) is 
+a continuous function.
+\end{theorem}
+
+\begin{theorem}[Pythagorean theorem]
+\label{pythagorean}
+This is a theorem about right triangles and can be summarised in the next 
+equation 
+\[ x^2 + y^2 = z^2 \]
+\end{theorem}
+
+And a consequence of theorem \ref{pythagorean} is the statement in the next 
+corollary.
+
+\begin{corollary}
+There's no right rectangle whose sides measure 3cm, 4cm, and 6cm.
+\end{corollary}
+
+You can reference theorems such as \ref{pythagorean} when a label is assigned.
+
+\begin{lemma}
+Given two line segments whose lengths are \(a\) and \(b\) respectively there is a 
+real number \(r\) such that \(b=ra\).
+\end{lemma}
+
+\subsection{citing}
+To cite, simply \cite{homo114514}
+
+
+
+
+If you want to add mathematical equations, this may be done either this way: $a +  b \neq \frac{a}{b}$. You may also add Greek letters like this: $\alpha$.\\ 
+
+\blindtext % Some blind text
+
+% Including figures
+\begin{figure}[htpb!] % Defines figure environment
+    \centering % Centers your figure
+\includegraphics[scale=0.8]{figure/figure.png} % Includes your figure and defines the size
+    \caption{A circle} % For your caption
+    \label{fig:my_label} % If you want to label your figure for in-text references
+\end{figure}
+
+\blindtext % Some blind text
+
+% Including tables
+%   Simple table
+\begin{table}[] % Add htpb! to make sure that table is where it should be
+    \centering
+    \begin{tabular}{c|c}
+        Saturday & Sunday \\
+        12 & 18
+    \end{tabular}
+    \caption{Overview of the weekend}% Caption for tables
+    \label{tab:weekend} % Reference for in-line referencing
+\end{table}
+
+%   Table with table generator
+\begin{table}[] % Add htpb! to make sure that table is where it should be
+    \centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+  & A   & B \\ \midrule
+C & 100 & 2 \\
+D & 3   & 5 \\ \bottomrule
+\end{tabular}
+    \caption{Random numbers} % Caption for tables
+    \label{tab:numbers} % Reference for in-line referencing
+\end{table}
+
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[level distance=1.5cm,
+      level 1/.style={sibling distance=3cm},
+      level 2/.style={sibling distance=1.5cm}]
+      \node [treenode, draw] {$1$}
+        child {node [treenode, draw] {$5$}
+        }
+        child { node [treenode, draw] {$3$}
+            child {node [treenode, draw]{$2$}}
+            child { node [treenode, draw]{$4$} edge from parent [dashed]}
+        };
+    \end{tikzpicture}
+    %\caption{I am a Tree}
+    \label{fig:gbscProof2}
+\end{figure}
