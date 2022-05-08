@@ -91,7 +91,7 @@ Therefore, $p=\frac{1}{2}$ maximizes the information gain at each node. For more
 
 \subsection{Analysis}
 
-Recall that Huffman coding is the best we can do. We hope that GBSC can be as good as Huffman coding. However, sometimes GBSC cannot reach the optimal bound. For $X$ in Example \ref{gbscExample}, the expected code length is $1.9$ for Huffman coding and $2$ for GBSC. Although GBSC is not the best coding, from experiments we observe that most of the time it is quite good, so we believe that the average code length of GBSC will not be too far away from $H(X)$. This idea inspire us to prove the following theorem (we will prove this theorem later).
+Recall that Huffman coding is the best we can do. We hope that GBSC can be as good as Huffman coding. However, sometimes GBSC cannot reach the optimal bound. For $X$ in Example \ref{gbscExample}, the expected code length is $1.9$ for Huffman coding and $2$ for GBSC. Although GBSC is not the best coding, from experiments we observe that most of the time it is quite good, so we believe that the average code length of GBSC will not be too far away from $H(X)$. This inspired us to prove the following theorem (see \textbf{Proposition \ref{GBSCProof}} for proof).
 
 \begin{theorem}
 \label{gbscShannon}
@@ -108,7 +108,7 @@ This gives us confidence that GBSC can be applied to obtain a quite good approxi
 
 Now we focus on proving Theorem \ref{gbscShannon}. Recall that by definition, the code length for a symbol with probability $p$ in Shannon coding is $\lceil -\log p \rceil$, so we only need to prove this proposition.
 
-\begin{proposition}
+\begin{proposition} \label{GBSCProof}
 \label{prop1}
 Assume that the code length for a symbol with probability $p$ is $L$ for GBSC. Then $L \le n$ if $p \ge 2^{-n}(n \in \mathbb{Z^+})$ , or equivalently, $L \le \lceil -\log p \rceil$.
 \end{proposition}
@@ -138,19 +138,27 @@ Assume that the code length for a symbol with probability $p$ is $L$ for GBSC. T
 % \end{figure}
 
 
-In Figure \ref{fig:gbscProof}, a circle represents a single node and a rectangle  represents a leaf or a subtree. The content in the nodes are indices of the nodes. Node $i(1)$ and node $i(2)$ are in the $i$th layer. $p_{i(j)}$ is the sum of probabilities of all the children nodes of node $i(j)$. 
+In Figure \ref{fig:gbscProof}, a circle represents a single node and a rectangle  represents a leaf or a subtree. The content in the nodes are indices of the nodes. Node $i(1)$ and node $i(2)$ are in the $i$-th layer. $p_{i(j)}$ is the sum of probabilities of all the children nodes of node $i(j)$. 
 
-We prove by contradiction. WLOG, assume that $p_{k+2(1)} \ge 2^{-(k+1)}$. If $p_{k+2(2)} < p_{k+1(1)} - p_{k+1(2)}$, then moving node $k+2(2)$ to node $k+1(2)$ will make $|p_{k+1(1)} - p_{k+1(2)}|$ smaller\footnote{We do not want to describe the process of "moving" mathematically, because it will just make things harder to understand. In case that some readers may feel confused, we explain the idea more clearly. Simply speaking, moving node $i$ to node $j$ means moving all the leaves in node $i$ to node $j$ so that they become the leaves of node $j$. If there are many leaves to be moved, the process of moving is not unique.}, so $p_{k+2(2)} \ge p_{k+1(1)} - p_{k+1(2)}$. Thus, $p_{k+1(1)} + p_{k+1(2)} \ge 2p_{k+2(1)} + p_{k+2(2)}$. Similarly, $p_{k+2(2)} \ge p_{k(1)} - p_{k(2)}$. Thus, $p_{k(1)} + p_{k(2)} \ge 2p_{k(1)} + p_{k+2(2)} \ge 4p_{k+2(1)} + p_{k+2(2)}$. The same argument shows that $p_{1(1)} + p_{1(2)} \ge 2^{k+1}p_{k+2(1)} + p_{k+2(2)} > 1$, which is a contradiction.
+% We prove by contradiction. WLOG, assume that $p_{k+2(1)} \ge 2^{-(k+1)}$. If $p_{k+2(2)} < p_{k+1(1)} - p_{k+1(2)}$, then moving node $k+2(2)$ to node $k+1(2)$ will make $|p_{k+1(1)} - p_{k+1(2)}|$ smaller\footnote{We do not want to describe the process of "moving" mathematically, because it will just make things harder to understand. In case that some readers may feel confused, we explain the idea more clearly. Simply speaking, moving node $i$ to node $j$ means moving all the leaves in node $i$ to node $j$ so that they become the leaves of node $j$. If there are many leaves to be moved, the process of moving is not unique.}, so $p_{k+2(2)} \ge p_{k+1(1)} - p_{k+1(2)}$. Thus, $p_{k+1(1)} + p_{k+1(2)} \ge 2p_{k+2(1)} + p_{k+2(2)}$. Similarly, $p_{k+2(2)} \ge p_{k(1)} - p_{k(2)}$. Thus, $p_{k(1)} + p_{k(2)} \ge 2p_{k(1)} - p_{k+2(2)} \ge 4p_{k+2(1)} + p_{k+2(2)}$. The same argument shows that $p_{1(1)} + p_{1(2)} \ge 2^{k+1}p_{k+2(1)} + p_{k+2(2)} > 1$, which is a contradiction.
 
-% illustrates the tree we are going to discuss. We consider the root as the $0$th layer, and assume that tree $2$ contains a node in $(k+2)$th layer with a probability $p \ge 2^-{k+1}$. By the inductive assumption, $p_2 > 0.5$. Otherwise, considering node $2$ as the root of a new decision tree will cause a contradiction. 
+Basically, we prove by contradiction. WLOG, assume that $p_{k+1(2)} \ge 2^{-k}$. Then we want to prove that the following propositions hold for any integer $n \in [1, k]$ by induction.
+\begin{enumerate}[label=(\roman*)]
+\item $p_{n(2)} \ge 2^{-n}$;
+\item $p_{n-1(1)}\ge 2^{-(n-1)} + p_{k+1(1)}$.
+\end{enumerate}
+If (i) and (ii) holds, then $p_{0(1)} \ge 1 + p_{k+1(2)} > 1$, causing a contradiction.
 
+\textbf{Basic step}. We first prove the case when $n=k$. If $p_{k+1(1)} < p_{k(1)} - p_{k(2)}$, then moving node $k+1(1)$ to node $k(2)$ will make $|p_{k(1)} - p_{k(2)}|$ smaller\footnote{We do not want to describe the process of "moving" mathematically, because it will just make things harder to understand. In case that some readers may feel confused, we explain the idea more clearly. Simply speaking, moving node $i$ to node $j$ means moving all the leaves in node $i$ to node $j$ so that they become the leaves of node $j$. If there are many leaves to be moved, the process of moving is not unique.}, so $p_{k+1(1)} \ge p_{k(1)} - p_{k(2)}$, i.e., $p_{k(2)}\ge p_{k(1)} - p_{k+1(1)} = p_{k+1(2)} \ge 2^{-k}$. (i) is true. $p_{k-1(1)} = p_{k+1(1)} + p_{k+1(2)} + p_{k(2)} \ge 2^{-(k-1)} + p_{k+1(1)}$. (ii) is true.
+
+\textbf{Inductive step}. Assume that the proposition is true for $n=m+1(1\le m \le k-1)$. If $p_{k+1(1)} < p_{m(1)} - p_{m(2)}$, then moving node $k+1(1)$ to node $m(2)$ will make $|p_{m(1)} - p_{m(2)}|$ smaller, so $p_{k+1(1)} \ge p_{m(1)} - p_{m(2)}$. By inductive assumption, $p_{m(1)} \ge 2^{-m} + p_{k+1(1)}$, so $p_{m(2)} \ge p_{m(1)} - p_{k+1(1)} \ge 2^{-m}$. (i) is true. $p_{m-1(1)}= p_{m(1)} + p_{m(2)} \ge 2^{-(m-1)} + p_{k+1(1)}$. (ii) is true. Therefore, the case when $n=m$ also holds.
 
 \begin{figure}[H]
     \centering
     \begin{tikzpicture}[level distance=1.5cm,
       level 1/.style={sibling distance=2cm},
       level 2/.style={sibling distance=2cm}]
-    \node [treenode, draw] {$0$}
+    \node [treenode, draw] {$0(1)$}
     child 
     {
         node [treenode, draw] {$1(1)$}
@@ -159,14 +167,14 @@ We prove by contradiction. WLOG, assume that $p_{k+2(1)} \ge 2^{-(k+1)}$. If $p_
             node [treenode, draw]{$\dots$}
             child
             {
-                node [treenode, draw]{\footnotesize $k+1(1)$}
+                node [treenode, draw]{$k(1)$}
                 child
                 {
-                    node [rectnode, draw]{$k+2(1)$}
+                    node [rectnode, draw]{$k+1(1)$}
                 }
-                child {node [rectnode, draw]{$k+2(2)$}}
+                child {node [rectnode, draw]{$k+1(2)$}}
             }
-            child {node [rectnode, draw]{$k+1(2)$}}
+            child {node [rectnode, draw]{$k(2)$}}
         }
         child {node [rectnode, draw]{$\dots$}}
     }
@@ -175,40 +183,6 @@ We prove by contradiction. WLOG, assume that $p_{k+2(1)} \ge 2^{-(k+1)}$. If $p_
     \caption{Illustration for the proof of Proposition \ref{prop1}.}
     \label{fig:gbscProof}
 \end{figure}
-
-% \begin{figure}[H]
-%     \centering
-%     \begin{tikzpicture}[level distance=1.5cm,
-%       level 1/.style={sibling distance=3cm},
-%       level 2/.style={sibling distance=1.5cm}]
-%       \node [treenode, draw] {$1$}
-%         child {node [treenode, draw] {$2$}
-%             child {node [rectnode, draw]{$4$}}
-%             child {node [rectnode, draw]{$5$}}
-%         }
-%         child { node [rectnode, draw] {$3$}
-%         };
-%     \end{tikzpicture}
-%     \caption{}
-% \end{figure}
-
-% \begin{figure}[H]
-%     \centering
-%     \begin{tikzpicture}[level distance=1.5cm,
-%       level 1/.style={sibling distance=3cm},
-%       level 2/.style={sibling distance=1.5cm}]
-%       \node [treenode, draw] {$1$}
-%         child {node [treenode, draw] {$2$}
-%         }
-%         child { node [rectnode, draw] {$2$}
-%             child {node [rectnode, draw]{$4$}}
-%             child { node [rectnode, draw]{$5$}}
-%         };
-%     \end{tikzpicture}
-%     \caption{}
-%     \label{fig:gbscProof3}
-% \end{figure}
-
 
 \end{proof}
 

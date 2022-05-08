@@ -67,32 +67,33 @@ Assume that $A$ and $B$ are the candidates of two nodes. Then the two nodes can 
 
 \subsection{First Try to Solving the DNA Detection Problem}
 
-The following proposition instruct us how to judge whether two nodes can be merged for this problem.
+The following proposition instructs us how to judge whether two nodes can be merged for this problem.
 
 \begin{proposition}
 Assume that $A$ and $B$ are the candidates of two nodes. Then the two nodes can be merged if and only if any of the two conditions holds:
-    \begin{enumerate}
+    \begin{enumerate}[label=(\arabic*)]
         \item $A$ or $B$ is continuous.
         \item $\min A > \max B$ or $\min B > \max A$.
     \end{enumerate}
 \end{proposition}
 
-Thus, we implemented our first algorithm that deals with the DNA detection problem. We carried out a experiment by generating \num{10000} random $p(x)$ with $n=6$ and compare the result of the brute force algorithm and the Huffman-based algorithm. The results of the experiment indicate that the result of the greedy algorithm is rather close to the optimal value. The result of each data is represented by a point in Figure \ref{fig:greedy_huffman_1}. The red line in Figure \ref{fig:greedy_huffman_1} is the optimal bound, because the brute force algorithm is promised to find the precise optimal value. We can see that most of the points are close to the red line, and many of them exactly lie on the red line, which means they reach the optimal bound. In fact, around $60\%$ of the data reach the optimal bound.
+Using these two conditions, we implemented our first algorithm that deals with the DNA detection problem. We carried out a experiment by generating \num{10000} random $p(x)$ with $n=6$ and compare the result of the brute force algorithm and the Huffman-based algorithm. The results of the experiment indicate that the result of this algorithm is rather close to the optimal value. The result of each data is represented by a point in Figure \ref{fig:greedy_huffman_1}. The red line in Figure \ref{fig:greedy_huffman_1} is the optimal bound, because the brute force algorithm is promised to find the precise optimal value. We can see that most of the points are close to the red line, and many of them exactly lie on the red line, which means they reach the optimal bound. In fact, around $60\%$ of the data reach the optimal bound.
 
-This intuition is further confirmed by Figure \ref{fig:greedy_huffman_2}. Let $L_b$ and $L_g$ be the expected length of the brute force algorithm and the Huffman-based algorithm, respectively. We define that $\text{gap} = \frac{L_g-L_b}{L_b}$. Although the maximum of gap is around $35\%$, in most cases, gap is less than $10\%$. Therefore, the result of the Huffman-based algorithm is very satisfactory.
+This intuition is further confirmed by Figure \ref{fig:greedy_huffman_2}. Let $L_b$ and $L_g$ be the expected length of the brute force algorithm and the Huffman-based algorithm, respectively. We define that $\text{gap} = \frac{L_g-L_b}{L_b}$. Although the maximum of gap is around $35\%$, in most cases, the gap is less than $10\%$. Therefore, the result of the Huffman-based algorithm is very satisfactory.
 
 \begin{figure}[H]
+    
     \centering
-    \includegraphics[width=0.45\textwidth]{figure/greedy_huffman_fig1.png}
-    \caption{Expected lengths of the brute force algorithm and the Huffman-based algorithm.}
+    
+    \begin{subfigure}{0.45\textwidth}
+        \includegraphics[width=1.0\textwidth]{figure/greedy_huffman_fig1.png}
+        \caption{Expected lengths of the brute force algorithm and the Huffman-based algorithm.}
     \label{fig:greedy_huffman_1}
-\end{figure}
-
-
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.45\textwidth]{figure/greedy_huffman_fig2.pdf}
+    \end{subfigure}
+    \begin{subfigure}{0.45\textwidth}
+    \includegraphics[width=1.2\textwidth]{figure/greedy_huffman_fig2.pdf}
     \caption{Distribution of the gap between the optimal value and the output of the Huffman-based algorithm.}
     \label{fig:greedy_huffman_2}
+      \end{subfigure}
+    \caption{Comparison between Huffman-based algorithm and the brute force optimal}
 \end{figure}
